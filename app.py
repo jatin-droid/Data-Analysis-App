@@ -294,8 +294,6 @@ if uploaded_file:
             st.dataframe(df.head())
         elif option == "Tail":
             st.dataframe(df.tail())
-        elif option == "To Markdown":
-            st.markdown(df.to_markdown())
         elif option == "Describe":
             st.dataframe(df.describe())
         elif option == "Dtypes":
@@ -740,3 +738,4 @@ else:
     """, unsafe_allow_html=True)
     
     st.info("📁 Please upload a CSV file using the uploader above to access all features")
+
