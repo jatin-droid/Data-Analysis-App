@@ -288,7 +288,7 @@ if uploaded_file:
     # Explore page
     if page == 'Explore':
         st.header("🔍 DATA EXPLORATION MODULE")
-        option = st.selectbox("Choose an operation", ["None", "Head", "Tail", "To Markdown", "Describe", "Dtypes", "Columns", "iLoc", "Missing Values"])
+        option = st.selectbox("Choose an operation", ["None", "Head", "Tail", "Describe", "Dtypes", "Columns", "iLoc", "Missing Values"])
         
         if option == "Head":
             st.dataframe(df.head())
@@ -738,4 +738,5 @@ else:
     """, unsafe_allow_html=True)
     
     st.info("📁 Please upload a CSV file using the uploader above to access all features")
+
 
