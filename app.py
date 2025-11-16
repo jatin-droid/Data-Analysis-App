@@ -585,7 +585,7 @@ if uploaded_file:
     
     # Modeling - UPDATED SECTION
     elif page == 'Modeling':
-        st.header("🤖 MACHINE LEARNING MODULE")
+        st.header("🤖 MACHINE LEARNING MODEL")
         
         # Problem type selection
         problem_type = st.radio("🎯 Select Problem Type", ["Classification", "Regression"])
@@ -904,3 +904,4 @@ else:
     """, unsafe_allow_html=True)
     
     st.info("📁 Please upload a CSV file using the uploader above to access all features")
+
