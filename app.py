@@ -47,14 +47,14 @@ st.markdown("""
     h1, h2, h3 {
         font-family: 'Orbitron', sans-serif !important;
         color: #00ffff !important;
-        text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+        text-shadow: 0 0 7px #00ffff, 0 0 10px #00ffff, 0 0 15px #00ffff;
         animation: pulseGlow 2s ease-in-out infinite;
         letter-spacing: 2px;
     }
     
     @keyframes pulseGlow {
-        0%, 100% { text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff; }
-        50% { text-shadow: 0 0 20px #00ffff, 0 0 30px #00ffff, 0 0 40px #00ffff; }
+        0%, 100% { text-shadow: 0 0 7px #00ffff, 0 0 15px #00ffff; }
+        50% { text-shadow: 0 0 6px #00ffff, 0 0 12px #00ffff, 0 0 20px #00ffff; }
     }
     
     /* Sidebar styling */
@@ -583,50 +583,211 @@ if uploaded_file:
             else:
                 st.info("🎯 Select an encoding type to proceed.")
     
-    # Modeling
+    # Modeling - UPDATED SECTION
     elif page == 'Modeling':
         st.header("🤖 MACHINE LEARNING MODULE")
         
+        # Problem type selection
+        problem_type = st.radio("🎯 Select Problem Type", ["Classification", "Regression"])
+        
         target_col = st.selectbox("🎯 Select the target column", df.columns)
         feature_cols = st.multiselect("📊 Select feature columns", [col for col in df.columns if col != target_col])
-        model_type = st.radio("Choose model type", ["Logistic Regression", "Decision Tree", "Random Forest"])
+        
+        # Model selection based on problem type
+        if problem_type == "Classification":
+            model_type = st.selectbox("Choose Classification Model", [
+                "Logistic Regression",
+                "Decision Tree Classifier",
+                "Random Forest Classifier",
+                "K-Nearest Neighbors (KNN)",
+                "Support Vector Machine (SVM)",
+                "Naive Bayes",
+                "Gradient Boosting Classifier",
+                "XGBoost Classifier"
+            ])
+        else:
+            model_type = st.selectbox("Choose Regression Model", [
+                "Linear Regression",
+                "Ridge Regression",
+                "Lasso Regression",
+                "Decision Tree Regressor",
+                "Random Forest Regressor",
+                "Support Vector Regressor (SVR)",
+                "Gradient Boosting Regressor",
+                "XGBoost Regressor"
+            ])
+        
+        # Advanced options
+        with st.expander("⚙️ Advanced Settings"):
+            test_size = st.slider("Test Set Size", 0.1, 0.5, 0.2, 0.05)
+            random_state = st.number_input("Random State", value=42, min_value=0)
         
         if st.button("🚀 Train Model"):
-            from sklearn.model_selection import train_test_split
-            from sklearn.metrics import accuracy_score, classification_report
-            from sklearn.preprocessing import LabelEncoder
-            from sklearn.linear_model import LogisticRegression
-            from sklearn.tree import DecisionTreeClassifier
-            from sklearn.ensemble import RandomForestClassifier
-            
-            data = df[feature_cols + [target_col]].dropna()
-            
-            for col in feature_cols:
-                if data[col].dtype == 'object':
-                    data[col] = LabelEncoder().fit_transform(data[col])
-            
-            if data[target_col].dtype == 'object':
-                data[target_col] = LabelEncoder().fit_transform(data[target_col])
-            
-            X = data[feature_cols]
-            y = data[target_col]
-            
-            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-            
-            if model_type == "Logistic Regression":
-                model = LogisticRegression(max_iter=1000)
-            elif model_type == "Decision Tree":
-                model = DecisionTreeClassifier()
+            if not feature_cols:
+                st.error("❌ Please select at least one feature column!")
             else:
-                model = RandomForestClassifier()
-            
-            model.fit(X_train, y_train)
-            y_pred = model.predict(X_test)
-            
-            st.subheader("✅ Model Evaluation")
-            st.write("Accuracy:", accuracy_score(y_test, y_pred))
-            st.text("Classification Report:")
-            st.text(classification_report(y_test, y_pred))
+                from sklearn.model_selection import train_test_split
+                from sklearn.metrics import (accuracy_score, classification_report, confusion_matrix,
+                                            mean_squared_error, r2_score, mean_absolute_error)
+                from sklearn.preprocessing import LabelEncoder, StandardScaler
+                from sklearn.linear_model import LogisticRegression, LinearRegression, Ridge, Lasso
+                from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
+                from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor, GradientBoostingClassifier, GradientBoostingRegressor
+                from sklearn.neighbors import KNeighborsClassifier
+                from sklearn.svm import SVC, SVR
+                from sklearn.naive_bayes import GaussianNB
+                
+                try:
+                    data = df[feature_cols + [target_col]].dropna()
+                    
+                    if data.empty:
+                        st.error("❌ No data available after removing missing values!")
+                    else:
+                        # Encode categorical features
+                        label_encoders = {}
+                        for col in feature_cols:
+                            if data[col].dtype == 'object':
+                                label_encoders[col] = LabelEncoder()
+                                data[col] = label_encoders[col].fit_transform(data[col])
+                        
+                        # Encode target if classification
+                        target_encoder = None
+                        if problem_type == "Classification" and data[target_col].dtype == 'object':
+                            target_encoder = LabelEncoder()
+                            data[target_col] = target_encoder.fit_transform(data[target_col])
+                        
+                        X = data[feature_cols]
+                        y = data[target_col]
+                        
+                        # Scale features for certain models
+                        scale_models = ["Support Vector Machine (SVM)", "K-Nearest Neighbors (KNN)", 
+                                      "Support Vector Regressor (SVR)", "Ridge Regression", "Lasso Regression"]
+                        scaler = None
+                        if model_type in scale_models:
+                            scaler = StandardScaler()
+                            X = scaler.fit_transform(X)
+                        
+                        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=int(random_state))
+                        
+                        # Initialize model
+                        if model_type == "Logistic Regression":
+                            model = LogisticRegression(max_iter=1000, random_state=int(random_state))
+                        elif model_type == "Linear Regression":
+                            model = LinearRegression()
+                        elif model_type == "Ridge Regression":
+                            model = Ridge(random_state=int(random_state))
+                        elif model_type == "Lasso Regression":
+                            model = Lasso(random_state=int(random_state))
+                        elif model_type == "Decision Tree Classifier":
+                            model = DecisionTreeClassifier(random_state=int(random_state))
+                        elif model_type == "Decision Tree Regressor":
+                            model = DecisionTreeRegressor(random_state=int(random_state))
+                        elif model_type == "Random Forest Classifier":
+                            model = RandomForestClassifier(random_state=int(random_state))
+                        elif model_type == "Random Forest Regressor":
+                            model = RandomForestRegressor(random_state=int(random_state))
+                        elif model_type == "K-Nearest Neighbors (KNN)":
+                            model = KNeighborsClassifier()
+                        elif model_type == "Support Vector Machine (SVM)":
+                            model = SVC(random_state=int(random_state))
+                        elif model_type == "Support Vector Regressor (SVR)":
+                            model = SVR()
+                        elif model_type == "Naive Bayes":
+                            model = GaussianNB()
+                        elif model_type == "Gradient Boosting Classifier":
+                            model = GradientBoostingClassifier(random_state=int(random_state))
+                        elif model_type == "Gradient Boosting Regressor":
+                            model = GradientBoostingRegressor(random_state=int(random_state))
+                        elif model_type in ["XGBoost Classifier", "XGBoost Regressor"]:
+                            try:
+                                import xgboost as xgb
+                                if model_type == "XGBoost Classifier":
+                                    model = xgb.XGBClassifier(random_state=int(random_state), eval_metric='logloss')
+                                else:
+                                    model = xgb.XGBRegressor(random_state=int(random_state))
+                            except ImportError:
+                                st.error("❌ XGBoost not installed. Using Gradient Boosting instead.")
+                                if model_type == "XGBoost Classifier":
+                                    model = GradientBoostingClassifier(random_state=int(random_state))
+                                else:
+                                    model = GradientBoostingRegressor(random_state=int(random_state))
+                        
+                        # Train model
+                        with st.spinner("🔄 Training model..."):
+                            model.fit(X_train, y_train)
+                            y_pred = model.predict(X_test)
+                        
+                        st.success("✅ Model trained successfully!")
+                        
+                        # Display results based on problem type
+                        if problem_type == "Classification":
+                            st.subheader("📊 Classification Metrics")
+                            
+                            col1, col2 = st.columns(2)
+                            with col1:
+                                accuracy = accuracy_score(y_test, y_pred)
+                                st.metric("🎯 Accuracy", f"{accuracy:.4f}")
+                            
+                            with col2:
+                                st.metric("📈 Training Samples", len(X_train))
+                            
+                            st.subheader("📋 Classification Report")
+                            st.text(classification_report(y_test, y_pred))
+                            
+                            st.subheader("🔥 Confusion Matrix")
+                            cm = confusion_matrix(y_test, y_pred)
+                            fig, ax = plt.subplots(figsize=(8, 6))
+                            sns.heatmap(cm, annot=True, fmt='d', cmap='cool', ax=ax)
+                            ax.set_title("Confusion Matrix")
+                            ax.set_xlabel("Predicted")
+                            ax.set_ylabel("Actual")
+                            ax.set_facecolor('#0a0e27')
+                            fig.patch.set_facecolor('#0a0e27')
+                            st.pyplot(fig)
+                            
+                        else:  # Regression
+                            st.subheader("📊 Regression Metrics")
+                            
+                            col1, col2, col3 = st.columns(3)
+                            with col1:
+                                mse = mean_squared_error(y_test, y_pred)
+                                st.metric("📉 MSE", f"{mse:.4f}")
+                            with col2:
+                                mae = mean_absolute_error(y_test, y_pred)
+                                st.metric("📊 MAE", f"{mae:.4f}")
+                            with col3:
+                                r2 = r2_score(y_test, y_pred)
+                                st.metric("📈 R² Score", f"{r2:.4f}")
+                            
+                            # Prediction vs Actual plot
+                            st.subheader("📈 Predictions vs Actual Values")
+                            fig, ax = plt.subplots(figsize=(10, 6))
+                            ax.scatter(y_test, y_pred, alpha=0.6, color='#00ffff', edgecolors='#8a2be2')
+                            ax.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--', lw=2)
+                            ax.set_xlabel("Actual Values")
+                            ax.set_ylabel("Predicted Values")
+                            ax.set_title("Actual vs Predicted")
+                            ax.set_facecolor('#0a0e27')
+                            fig.patch.set_facecolor('#0a0e27')
+                            st.pyplot(fig)
+                        
+                        # Feature importance for tree-based models
+                        if hasattr(model, 'feature_importances_'):
+                            st.subheader("🎯 Feature Importance")
+                            importance_df = pd.DataFrame({
+                                'Feature': feature_cols,
+                                'Importance': model.feature_importances_
+                            }).sort_values('Importance', ascending=False)
+                            
+                            fig, ax = plt.subplots(figsize=(10, 6))
+                            ax.barh(importance_df['Feature'], importance_df['Importance'], color='#00ffff', edgecolor='#8a2be2')
+                            ax.set_xlabel('Importance')
+                            ax.set_title('Feature Importance')
+                            ax.set_facecolor('#0a0e27')
+                            fig.patch.set_facecolor('#0a0e27')
+                            st.pyplot(fig)
+                except:
+                    print("try again")
     
     # About page
     elif page == 'About':
@@ -666,7 +827,12 @@ if uploaded_file:
         
         **🤖 Machine Learning Integration**
         - Build ML models directly in the app
-        - Support for Logistic Regression, Decision Trees, and Random Forests
+        - **16 Total Models** - 8 Classification & 8 Regression algorithms
+        - Classification: Logistic Regression, Decision Tree, Random Forest, KNN, SVM, Naive Bayes, Gradient Boosting, XGBoost
+        - Regression: Linear, Ridge, Lasso, Decision Tree, Random Forest, SVR, Gradient Boosting, XGBoost
+        - Advanced metrics and visualizations
+        - Feature importance analysis
+        - Confusion matrix and performance plots
         
         ---
         
@@ -683,7 +849,7 @@ if uploaded_file:
         - **Frontend:** Streamlit with Custom CSS
         - **Data Processing:** Pandas, NumPy
         - **Visualizations:** Matplotlib, Seaborn
-        - **Machine Learning:** Scikit-learn
+        - **Machine Learning:** Scikit-learn, XGBoost
         - **Design:** Futuristic UI with neon gradients and animations
         
         ---
@@ -738,5 +904,3 @@ else:
     """, unsafe_allow_html=True)
     
     st.info("📁 Please upload a CSV file using the uploader above to access all features")
-
-
