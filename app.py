@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-
+import io
 st.set_page_config(page_title="Automated Data Analysis App", layout="wide")
 
 
@@ -46,26 +46,26 @@ st.markdown("""
     /* Headers with neon glow */
     h1, h2, h3 {
         font-family: 'Orbitron', sans-serif !important;
-        color: #00ffff !important;
-        text-shadow: 0 0 7px #00ffff, 0 0 10px #00ffff, 0 0 15px #00ffff;
+        color: #FFB6C1 !important;
+        text-shadow: 0 0 7px #FFB6C1, 0 0 10px #FFB6C1, 0 0 15px #FFB6C1;
         animation: pulseGlow 2s ease-in-out infinite;
         letter-spacing: 2px;
     }
     
     @keyframes pulseGlow {
-        0%, 100% { text-shadow: 0 0 7px #00ffff, 0 0 15px #00ffff; }
-        50% { text-shadow: 0 0 6px #00ffff, 0 0 12px #00ffff, 0 0 20px #00ffff; }
+        0%, 100% { text-shadow: 0 0 7px #FFB6C1, 0 0 15px #FFB6C1; }
+        50% { text-shadow: 0 0 6px #FFB6C1, 0 0 12px #FFB6C1, 0 0 20px #FFB6C1; }
     }
     
     /* Sidebar styling */
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #0d1117 0%, #1a1d3f 100%);
-        border-right: 2px solid #00ffff;
+        border-right: 2px solid #FFB6C1;
         box-shadow: 5px 0 20px rgba(0, 255, 255, 0.3);
     }
     
     [data-testid="stSidebar"] * {
-        color: #00ffff !important;
+        color: #FFB6C1 !important;
         font-family: 'Rajdhani', sans-serif;
     }
     
@@ -80,14 +80,14 @@ st.markdown("""
     }
     
     .stRadio > label:hover {
-        border-color: #00ffff;
+        border-color: #FFB6C1;
         box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
         transform: translateX(5px);
     }
     
     /* Buttons with neon effect */
     .stButton > button {
-        background: linear-gradient(135deg, #8a2be2 0%, #00ffff 100%);
+        background: linear-gradient(135deg, #8a2be2 0%, #FFB6C1 100%);
         color: #000 !important;
         font-family: 'Orbitron', sans-serif;
         font-weight: 700;
@@ -133,14 +133,14 @@ st.markdown("""
         background: rgba(26, 29, 63, 0.8) !important;
         border: 2px solid rgba(0, 255, 255, 0.5) !important;
         border-radius: 10px !important;
-        color: #00ffff !important;
+        color: #FFB6C1 !important;
         font-family: 'Rajdhani', sans-serif;
         transition: all 0.3s ease;
     }
     
     .stTextInput > div > div > input:focus,
     .stNumberInput > div > div > input:focus {
-        border-color: #00ffff !important;
+        border-color: #FFB6C1 !important;
         box-shadow: 0 0 15px rgba(0, 255, 255, 0.5) !important;
     }
     
@@ -163,7 +163,7 @@ st.markdown("""
     .stTabs [data-baseweb="tab"] {
         background: linear-gradient(135deg, rgba(138, 43, 226, 0.3), rgba(0, 255, 255, 0.3));
         border-radius: 10px;
-        color: #00ffff !important;
+        color: #FFB6C1 !important;
         font-family: 'Orbitron', sans-serif;
         font-weight: 600;
         border: 1px solid rgba(0, 255, 255, 0.5);
@@ -177,7 +177,7 @@ st.markdown("""
     }
     
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #8a2be2, #00ffff) !important;
+        background: linear-gradient(135deg, #8a2be2, #FFB6C1) !important;
         color: #000 !important;
         box-shadow: 0 0 20px rgba(0, 255, 255, 0.7);
     }
@@ -185,9 +185,9 @@ st.markdown("""
     /* Success/Warning/Info messages */
     .stSuccess, .stWarning, .stInfo {
         background: rgba(26, 29, 63, 0.8) !important;
-        border-left: 4px solid #00ffff !important;
+        border-left: 4px solid #FFB6C1 !important;
         border-radius: 10px !important;
-        color: #00ffff !important;
+        color: #FFB6C1 !important;
         box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
     }
     
@@ -208,7 +208,7 @@ st.markdown("""
     }
     
     [data-testid="stFileUploader"]:hover {
-        border-color: #00ffff;
+        border-color: #FFB6C1;
         box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
     }
     
@@ -223,19 +223,19 @@ st.markdown("""
     }
     
     ::-webkit-scrollbar-thumb {
-        background: linear-gradient(135deg, #8a2be2, #00ffff);
+        background: linear-gradient(135deg, #8a2be2, #FFB6C1);
         border-radius: 10px;
     }
     
     ::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(135deg, #00ffff, #8a2be2);
+        background: linear-gradient(135deg, #FFB6C1, #8a2be2);
     }
     
     /* Metric containers */
     [data-testid="stMetricValue"] {
-        color: #00ffff !important;
+        color: #FFB6C1 !important;
         font-family: 'Orbitron', sans-serif;
-        text-shadow: 0 0 10px #00ffff;
+        text-shadow: 0 0 10px #FFB6C1;
     }
     
     /* General text */
@@ -248,7 +248,7 @@ st.markdown("""
         background: linear-gradient(90deg, rgba(138, 43, 226, 0.3), rgba(0, 255, 255, 0.3));
         border: 1px solid rgba(0, 255, 255, 0.5);
         border-radius: 10px;
-        color: #00ffff !important;
+        color: #FFB6C1 !important;
         font-family: 'Orbitron', sans-serif;
     }
     </style>
@@ -288,10 +288,15 @@ if uploaded_file:
     # Explore page
     if page == 'Explore':
         st.header("🔍 DATA EXPLORATION MODULE")
-        option = st.selectbox("Choose an operation", ["None", "Head", "Tail", "Describe", "Dtypes", "Columns", "iLoc", "Missing Values"])
+        option = st.selectbox("Choose an operation", ["None","Info", "Head", "Tail", "Describe", "Dtypes", "Columns", "iLoc", "Missing Values"])
         
         if option == "Head":
             st.dataframe(df.head())
+        elif option == "Info":
+            buffer = io.StringIO()
+            df.info(buf=buffer)
+            info_str = buffer.getvalue()
+            st.text(info_str)    
         elif option == "Tail":
             st.dataframe(df.tail())
         elif option == "Describe":
@@ -428,7 +433,7 @@ if uploaded_file:
             with tab2:
                 st.subheader("Histogram")
                 fig, ax = plt.subplots()
-                ax.hist(df[col1].dropna(), bins=20, color='#00ffff', edgecolor='#8a2be2')
+                ax.hist(df[col1].dropna(), bins=20, color='#FFB6C1', edgecolor='#8a2be2')
                 ax.set_title(f"Histogram of {col1}")
                 ax.set_facecolor('#0a0e27')
                 fig.patch.set_facecolor('#0a0e27')
@@ -441,7 +446,7 @@ if uploaded_file:
             with tab4:
                 st.subheader("Scatter Plot")
                 fig, ax = plt.subplots()
-                ax.scatter(df[col1], df[col2], alpha=0.7, color='#00ffff', edgecolors='#8a2be2')
+                ax.scatter(df[col1], df[col2], alpha=0.7, color='#FFB6C1', edgecolors='#8a2be2')
                 ax.set_xlabel(col1)
                 ax.set_ylabel(col2)
                 ax.set_title(f"{col1} vs {col2}")
@@ -465,7 +470,7 @@ if uploaded_file:
             with tab6:
                 st.subheader("Box Plot")
                 fig, ax = plt.subplots()
-                sns.boxplot(data=df[col1], ax=ax, color='#00ffff')
+                sns.boxplot(data=df[col1], ax=ax, color='#FFB6C1')
                 ax.set_title(f"Boxplot of {col1}")
                 ax.set_facecolor('#0a0e27')
                 fig.patch.set_facecolor('#0a0e27')
@@ -481,7 +486,7 @@ if uploaded_file:
                     if pie_col:
                         pie_data = df[pie_col].value_counts()
                         fig, ax = plt.subplots()
-                        colors = ['#00ffff', '#8a2be2', '#ff00ff', '#00ff00', '#ffff00']
+                        colors = ['#FFB6C1', '#8a2be2', '#FFB6C1', '#00ff00', '#ffff00']
                         ax.pie(pie_data, labels=pie_data.index, autopct='%1.1f%%', startangle=90, colors=colors)
                         ax.axis("equal")
                         fig.patch.set_facecolor('#0a0e27')
@@ -585,7 +590,7 @@ if uploaded_file:
     
     # Modeling - UPDATED SECTION
     elif page == 'Modeling':
-        st.header("🤖 MACHINE LEARNING MODEL")
+        st.header("🤖 MACHINE LEARNING MODULE")
         
         # Problem type selection
         problem_type = st.radio("🎯 Select Problem Type", ["Classification", "Regression"])
@@ -762,7 +767,7 @@ if uploaded_file:
                             # Prediction vs Actual plot
                             st.subheader("📈 Predictions vs Actual Values")
                             fig, ax = plt.subplots(figsize=(10, 6))
-                            ax.scatter(y_test, y_pred, alpha=0.6, color='#00ffff', edgecolors='#8a2be2')
+                            ax.scatter(y_test, y_pred, alpha=0.6, color='#FFB6C1', edgecolors='#8a2be2')
                             ax.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--', lw=2)
                             ax.set_xlabel("Actual Values")
                             ax.set_ylabel("Predicted Values")
@@ -780,7 +785,7 @@ if uploaded_file:
                             }).sort_values('Importance', ascending=False)
                             
                             fig, ax = plt.subplots(figsize=(10, 6))
-                            ax.barh(importance_df['Feature'], importance_df['Importance'], color='#00ffff', edgecolor='#8a2be2')
+                            ax.barh(importance_df['Feature'], importance_df['Importance'], color='#F4C2C2', edgecolor='#8a2be2')
                             ax.set_xlabel('Importance')
                             ax.set_title('Feature Importance')
                             ax.set_facecolor('#0a0e27')
@@ -904,4 +909,3 @@ else:
     """, unsafe_allow_html=True)
     
     st.info("📁 Please upload a CSV file using the uploader above to access all features")
-
