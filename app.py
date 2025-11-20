@@ -49,7 +49,7 @@ if uploaded_file:
     
     # Sidebar navigation - ONLY when file is uploaded
     st.sidebar.title('🎮 CONTROL PANEL')
-    st.sidebar.write("Welcome to the Futuristic Data Analysis Hub! Navigate through different modules to explore, visualize, and analyze your data with cutting-edge tools.")
+    st.sidebar.write("Welcome to the Data Analysis Hub! Navigate through different modules to explore, visualize, and analyze your data with cutting-edge tools.")
     
     # Page selection
     page = st.sidebar.radio(
