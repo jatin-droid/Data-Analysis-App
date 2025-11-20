@@ -82,7 +82,7 @@ else:
     st.markdown("""
     <div style='text-align: center; padding: 50px;'>
         <h2 style='font-size: 3em;'>🌌</h2>
-        <h3>Welcome to the  of Data Analysis</h3>
+        <h3>Welcome to the Futire of Data Analysis</h3>
         <p style='font-size: 1.2em; margin-top: 20px;'>
             Upload your CSV file to begin your journey into advanced data exploration
         </p>
