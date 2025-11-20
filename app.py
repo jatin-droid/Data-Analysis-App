@@ -10,7 +10,7 @@ from modules import explore, filtering, select, clean, visualize, grouping, enco
 
 # Configure page
 st.set_page_config(
-    page_title="Futuristic Data Analysis Hub",
+    page_title="Data Analysis Hub",
     page_icon="🌌",
     layout="wide",
     initial_sidebar_state="collapsed"  # Changed to collapsed initially
@@ -21,7 +21,7 @@ apply_theme()
 
 # Welcome section
 Name = st.text_input("🚀 Enter Your Name")
-st.title(f"⚡ Hi {Name}! Welcome to the 🌌 FUTURISTIC DATA ANALYSIS HUB")
+st.title(f"⚡ Hi {Name}! Welcome to the 🌌 DATA ANALYSIS HUB")
 
 # File uploader
 st.subheader("📤 Upload Your Dataset")
@@ -82,7 +82,7 @@ else:
     st.markdown("""
     <div style='text-align: center; padding: 50px;'>
         <h2 style='font-size: 3em;'>🌌</h2>
-        <h3>Welcome to the Future of Data Analysis</h3>
+        <h3>Welcome to the  of Data Analysis</h3>
         <p style='font-size: 1.2em; margin-top: 20px;'>
             Upload your CSV file to begin your journey into advanced data exploration
         </p>
